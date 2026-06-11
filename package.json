@@ -1,0 +1,24 @@
+{
+  "name": "whereisit-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HansonBK/WhereIsIt-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HansonBK/WhereIsIt-Backend/issues"
+  },
+  "homepage": "https://github.com/HansonBK/WhereIsIt-Backend#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "prisma": "^7.8.0"
+  }
+}
