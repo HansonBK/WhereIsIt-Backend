@@ -13,7 +13,7 @@ router.post("/api/auth/register", async (req,res) =>{
 
         const {email, password, name} = req.body;
         if(!email || !password || !name){
-            return res.status(400).json("Please provide both email and password");
+            return res.status(400).json("All field are required! ");
         }
         const createUser = await authService.register(email, password, name);
 
