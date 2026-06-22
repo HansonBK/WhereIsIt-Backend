@@ -34,14 +34,37 @@ const hashedPassword = await bcrypt.hash(password, 10);
 
 }
 
+async function login(email, password) {
 
 
+    try {
 
-function HelloMessage() {
-    return "Hello Funcion!";
+       const user = await prisma.user.findUnique({
+        where: {
+
+            email:email,
+        }
+       })
+        
+       if (!user){
+         return null;
+       }
+
+       const isPasswordValid =  await bcrypt.compare(password, user.password);
+       if(!isPasswordValid){
+        return null; 
+       }
+       return user;
+    } catch (error) {
+        console.error("Error db: ", error );
+        throw error;
+    }
 }
 
+
+
+
 module.exports = {
-    HelloMessage,
+   
     register
 };
