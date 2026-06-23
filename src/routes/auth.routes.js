@@ -31,4 +31,38 @@ router.post("/api/auth/register", async (req,res) =>{
 
 })
 
+router.post("/api/auth/login", async (req,res) => {
+    try {
+        const {email, password} = req.body;
+
+        if(!email || !password){
+            return res.status(400).json("All field are required! ");
+        }
+        const user = await authService.login(email,password);
+
+        if (!user) {
+            return res.status(401).json("Invalid email or password!");
+        }
+
+         return res.status(200).json({
+            message: "Logged in successfully!",
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+            }
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "login failed! ", 
+            error: error.message
+        });
+    }
+})
+
+
+
+
+
+
 module.exports = router;
