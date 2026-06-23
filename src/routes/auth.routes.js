@@ -1,6 +1,7 @@
 const express = require ("express");
 const router = express.Router();
 const authService = require("../services/auth.service.js");
+const jwt = require("jsonwebtoken");
 
 
 router.get("/", (req, res)=> {
@@ -44,8 +45,15 @@ router.post("/api/auth/login", async (req,res) => {
             return res.status(401).json("Invalid email or password!");
         }
 
+        const token = jwt.sign(
+            {id: user.id},
+            process.env.JWT_SECRET ,
+            {expiresIn: "1d"}
+        )
+
          return res.status(200).json({
             message: "Logged in successfully!",
+            token : token,
             user: {
                 id: user.id,
                 email: user.email,
