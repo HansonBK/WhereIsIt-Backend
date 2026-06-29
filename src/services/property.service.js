@@ -55,7 +55,7 @@ async function updateProperty(propertyId, updateData) {
     try {
         return await prisma.property.update({
             where:{
-                id: userId
+                id: propertyId
             },
             data: updateData
         })
@@ -70,7 +70,7 @@ async function deleteProperty(propertyId) {
     try {
         return await prisma.property.delete({
             where:{
-                id: userId
+                id: propertyId
             }
         })
     } catch (error) {
