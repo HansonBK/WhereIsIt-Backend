@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const propertyServices = require("../services/property.service.js");
 const verifyToken = require("../middleware/Jwt.auth.js");
+const { Prisma } = require("@prisma/client/extension");
 
 router.use(verifyToken);
 
@@ -24,7 +25,8 @@ router.post("/", async (req, res)=>{
 router.get("/", async(req,res)=>{
 
     try {
-        const properties = await propertyServices.getAllProperties();
+        const userId = req.user.id
+        const properties = await propertyServices.getAllProperties(userId);
         return res.status(200).json(properties);
 
     } catch (error) {
@@ -35,8 +37,9 @@ router.get("/", async(req,res)=>{
 router.get("/:id", async(req,res)=>{
 
     try {
+        const userId = req.user.id;
         const propertyId = req.params.id;
-        const propertiy = await propertyServices.getpropertyById(propertyId);
+        const propertiy = await propertyServices.getpropertyById(propertyId, userId);
         if(!propertiy){
             return res.status(404).json({message: "Property not found! "});
 
@@ -54,7 +57,8 @@ router.put("/:id", async (req,res)=>{
     try {
         const propertyId = req.params.id;
         const updateData = req.body;
-        const propertiy = await propertyServices.updateProperty(propertyId, updateData);
+        const userId = req.user.id;
+        const propertiy = await propertyServices.updateProperty(propertyId, userId,updateData);
         return res.status(200).json(propertiy);
     } catch (error) {
         if (error.code === 'P2025') {
@@ -69,8 +73,9 @@ router.put("/:id", async (req,res)=>{
 router.delete("/:id", async (req, res) => {
     try {
         const propertyId = req.params.id;
+        const userId = req.user.id;
         
-        await propertyServices.deleteProperty(propertyId);
+        await propertyServices.deleteProperty(propertyId, userId);
         return res.status(200).json({ message: "Property deleted successfully" });
     } catch (error) {
         if (error.code === 'P2025') {

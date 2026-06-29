@@ -23,11 +23,15 @@ async function createProperty(name, userId) {
     }
 }
 
-async function getAllProperties() {
+async function getAllProperties(userId) {
     
     try {
 
-        return await prisma.property.findMany();
+        return await prisma.property.findMany({
+            where:{
+                userId : userId
+            }
+        });
         
     } catch (error) {
         console.error("Error fetching properties!: ", error);
@@ -36,13 +40,17 @@ async function getAllProperties() {
     }
 }
 
-async function getpropertyById(propertyId) {
+async function getpropertyById(propertyId, userId) {
     try {
-        return await prisma.property.findUnique({
+        const property =  await prisma.property.findUnique({
             where:{
                 id : propertyId
             }
-        }) 
+        });
+        if (!property || property.userId !== userId) {
+            return null; 
+        }
+        return property;
 
     } catch (error) {
         console.error("Error fetching property: ", error);
@@ -50,9 +58,16 @@ async function getpropertyById(propertyId) {
     }
 }
 
-async function updateProperty(propertyId, updateData) {
+async function updateProperty(propertyId, userId,updateData) {
     
     try {
+        const property = await getpropertyById(propertyId, userId);
+        if(!property){
+            const error = new Error("Not found or unauthorized");
+            error.code = 'P2025';
+            throw error;
+        }
+
         return await prisma.property.update({
             where:{
                 id: propertyId
@@ -68,6 +83,14 @@ async function updateProperty(propertyId, updateData) {
 async function deleteProperty(propertyId) {
 
     try {
+
+        const property = await getpropertyById(propertyId, userId);
+        if(!property){
+            const error = new Error("Not found or unauthorized");
+            error.code = 'P2025';
+            throw error;
+        }
+
         return await prisma.property.delete({
             where:{
                 id: propertyId
