@@ -5,20 +5,48 @@
 
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
   provider = "postgresql"
-  
 }
 
 model User {
+  id         String     @id @default(uuid())
+  email      String     @unique
+  password   String 
+  name       String
+  createdAt  DateTime   @default(now())
+  properties Property[]
+}
 
-  id String @id @default(uuid())
-  email String @unique
-  password String 
-  name String
-  createdAt DateTime @default(now())
+model Property {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String   
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  spaces    Space[]  
+} 
 
+model Space {
+  id         String      @id @default(uuid())
+  name       String
+  propertyId String
+  property   Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  containers Container[] 
+}
+
+model Container {
+  id        String   @id @default(uuid()) 
+  name      String
+  spaceId   String
+  space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  items     Item[]   
+}
+
+model Item { 
+  id          String    @id @default(uuid())
+  name        String
+  containerId String
+  container   Container @relation(fields: [containerId], references: [id], onDelete: Cascade)
 }
