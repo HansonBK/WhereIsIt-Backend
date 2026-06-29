@@ -2,7 +2,7 @@ const express = require ("express");
 const router = express.Router();
 const authService = require("../services/auth.service.js");
 const jwt = require("jsonwebtoken");
-
+const verifyToken = require("../middleware/Jwt.auth.js");
 
 
 router.post("/api/auth/register", async (req,res) =>{
@@ -64,6 +64,14 @@ router.post("/api/auth/login", async (req,res) => {
         });
     }
 })
+
+router.get("/api/auth/test", verifyToken, (req, res) => {
+    
+    res.status(200).json({
+        message: "Welcome to your secure dashboard!",
+        userId: req.user.id
+    });
+});
 
 
 
