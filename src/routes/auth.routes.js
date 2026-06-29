@@ -4,10 +4,7 @@ const authService = require("../services/auth.service.js");
 const jwt = require("jsonwebtoken");
 
 
-router.get("/", (req, res)=> {
 
-    res.json(authService.HelloMessage());
-});
 router.post("/api/auth/register", async (req,res) =>{
 
     try {

@@ -56,8 +56,7 @@ async function login(email, password) {
        }
        return user;
     } catch (error) {
-        console.error("Error db: ", error );
-        throw error;
+        console.error("Error db: ")
     }
 }
 
